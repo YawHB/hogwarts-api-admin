@@ -37,22 +37,13 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-  
+      
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: java-app
       
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4259D0D156D949FAADF5EBED9DC1B60D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_45DAF7E610BA44C49FF227B751DC03B9 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B6DDA256D8984C8EAC3BD03B3363E547 }}
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -60,5 +51,4 @@ jobs:
           app-name: 'Hogwarts-API'
           slot-name: 'Production'
           package: '*.jar'
-          
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AAA4EC1BDAA54FF9B81F8C6CA34990EC }}
